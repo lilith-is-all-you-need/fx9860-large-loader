@@ -44,5 +44,5 @@ record for the current emulator build.
   acceptance as separate gates. The Giac project is implementing that integration
   independently; its in-progress output is not certified by this probe.
 
-The shared OS profile headers are copied with identical content and checked in
+The imported OS profile headers retain the probe revision and are checked in
 the component manifest. Native source is MIT, like the FxStudio loader code.

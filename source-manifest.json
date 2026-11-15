@@ -34,7 +34,7 @@
     "probes/extended-cas/tools/prepare_image.py": "a9807f4a5732f9fc623ca8325ca0728ae2a9fdaef7135de99d0df2054c97b440",
     "probes/extended-cas/tools/relocations.py": "df635df5b53ce687a4f2e936cfeeb68a634193f4ce0674f248c1fb825094df1b",
     "probes/extended-loader/CMakeLists.txt": "2fa5689e930415a54f681e38bfe9297d1711e1037d069869792d594c61ad8cec",
-    "probes/extended-loader/README.md": "f5d6ca3b669c7fc3d9a8a5b6d71b90867901517dc539dfd5c516608723f5dcab",
+    "probes/extended-loader/README.md": "e19b57176d0b3140369745a4b893468d098d7cdcd392a38b79bc930b7d0155ad",
     "probes/extended-loader/assets/icon.png": "aafe7bc0f8067f4341fcc77f4844878e630243dca3ef2d2e57845df375a71f2e",
     "probes/extended-loader/fxide.json": "22a88c278615ad8b3f4a8f3f4b5f7115e24474015b8ce984a2c03c02fc436f3b",
     "probes/extended-loader/src/main.c": "11f1bc92fc88a959f678a22e3ddcaf15534bd99ef09aeed5116ce38e305e9047",
