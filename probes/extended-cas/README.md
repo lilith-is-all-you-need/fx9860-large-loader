@@ -1,4 +1,10 @@
-# Source-integrated Giac loader (experimental RC2)
+# Dynamic source-integrated loader
+
+**Current build:** `ExtLoad.g1a`, external `EXT.PRF`, directory selection and
+runtime-sized page tables. No compile-time exact image hash or 699-page array.
+See the [current English manual](../../docs/runtime.en.md) or
+[中文手册](../../docs/runtime.zh-CN.md). The historical RC2 details below describe
+the predecessor, not current artifact hashes or allocation sizes.
 
 Imported from the user's completed `mapped-cas-20261116` integration.
 This is distinct from the original 512-page KhiCAS adapter and synthetic
@@ -14,10 +20,10 @@ The combined 39,680 bytes were tested in a 40,960-byte simulated heap.
 ## Build and prepare
 
 Open this folder in the FxStudio offline SDK, target `khimap`; build Debug then
-Release. The checked-in expected header binds the exact reviewed payload.
+Release. An external profile binds the exact prepared payload.
 The build checks that all resident references remain within resident code.
 `tools/prepare_image.py RAW_PAYLOAD OUTPUT` creates the private 512-byte header
-and compile-time hash; rebuild the loader whenever it changes. This command
+and external profile; the loader no longer needs rebuilding. This command
 accepts an already integrated raw payload, not an arbitrary G1A.
 
 `payload-adapter/` contains the startup, TLB, syscall and atomic replacements

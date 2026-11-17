@@ -36,3 +36,7 @@ _\name:
  SC r_clear_keys,0x241
  SC r_keywait,0x247
  SC r_poweroff,0x3f4
+ SC r_media_free,0x42e
+ SC r_find_first,0x43b
+ SC r_find_next,0x43c
+ SC r_find_close,0x43d

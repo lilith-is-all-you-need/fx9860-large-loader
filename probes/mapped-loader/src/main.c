@@ -1,13 +1,15 @@
 #include "loader.h"
+#include <fxlarge/catalog.h>
+void *memcpy(void *out,const void *in,size_t n){unsigned char *a=out;const unsigned char *b=in;while(n--)*a++=*b++;return out;}
 static void screen(const char *a,const char *b)
 {r_clear();r_print(0,0,(const unsigned char *)"KhiCAS Loader 0.1",0);r_print(0,18,(const unsigned char *)a,0);r_print(0,32,(const unsigned char *)b,0);r_display();}
 static void wide(uint16_t *out,const char *s){while(*s)*out++=(unsigned char)*s++;*out=0;}
 static void finalize(Context *c){r_quit(0);r_free(c);}
 static int equal(const void *a,const void *b,unsigned n)
 {const unsigned char *x=a,*y=b;while(n--)if(*x++!=*y++)return 0;return 1;}
-static void failure_report(const char *why)
+static void failure_report(const char *id,const char *why)
 {
- uint16_t path[32];wide(path,"\\\\fls0\\KLoad.txt");char b[512];
+ uint16_t path[64];fx_path(path,id,"KLOAD.TXT");char b[512];
  int fd=r_open(path,1,0);if(fd<0)return;
  int n=r_read(fd,b,8,0),size=r_size(fd);r_close(fd);
  if(n!=8||size!=LOG_BYTES||!equal(b,"FXKLOAD1",8))return;
@@ -33,6 +35,10 @@ static __attribute__((noinline)) int verify_image(Context *c,int fd)
 }
 int main(void)
 {
+ FxAppItem item={{0},{0}};int selected=fx_choose(&item,"KHICAS.KPF","FX / KHICAS APPS",3);if(!selected)return 1;
+ if(selected<0){uint16_t oldpath[64];Profile oldprofile;fx_path(oldpath,"","KHICAS.KPF");
+  if(!fx_exact(oldpath,&oldprofile,sizeof oldprofile)){screen("No KhiCAS apps","Copy FXAPPS folders");
+   int key=0;while(key!=30002)r_getkey(&key);return 1;}}
  r_clear();r_print(0,0,(const unsigned char *)"KhiCAS Loader 0.2",0);
  r_print(0,14,(const unsigned char *)"MENU return untested",0);
  r_print(0,26,(const unsigned char *)"Try EXE to resume",0);
@@ -51,8 +57,8 @@ int main(void)
  if(start<0x88040000u||end>WORK_BASE-4096||end<start){why="Heap conflicts";goto fail;}
  for(unsigned i=0;i<sizeof *c;i++)((unsigned char *)c)[i]=0;
  c->finalize=finalize;c->allocation_bytes=total;c->runner_bytes=bytes;c->ram_word=REG(0x08100000);
- wide(c->log_path,"\\\\fls0\\KLoad.txt");wide(c->bin_path,"\\\\fls0\\khicas.bin");wide(c->self_path,"\\\\fls0\\KLoad.g1a");
- uint16_t path[32];wide(path,"\\\\fls0\\khicas.kpf");
+ fx_path(c->log_path,item.id,"KLOAD.TXT");fx_path(c->bin_path,item.id,item.id[0]?"IMAGE.BIN":"khicas.bin");wide(c->self_path,"\\\\fls0\\KLoad.g1a");
+ uint16_t path[64];fx_path(path,item.id,"KHICAS.KPF");
  int fd=r_open(path,1,0);
  if(fd<0){why="Missing khicas.kpf";goto fail;}
  int got=r_size(fd)==sizeof(Profile)?r_read(fd,&c->profile,sizeof(Profile),0):-1;
@@ -86,6 +92,6 @@ int main(void)
  {int key=0;while(key!=30002&&key!=30010)r_getkey(&key);}return 1;
 fail:
  if(c){r_free(c);}
- failure_report(why);screen("Loader not started",why);
+ failure_report(item.id,why);screen("Loader not started",why);
  {int key=0;while(key!=30002&&key!=30010)r_getkey(&key);}return 1;
 }

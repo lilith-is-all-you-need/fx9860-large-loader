@@ -1,7 +1,7 @@
 #include "loader.h"
 /* Relocated with the code, never held in payload-cleared user RAM. */
 Context *map_context=(Context *)(uintptr_t)1;
-static int in_window(uint32_t va){return va>=BASE && va<BASE+PAGE_COUNT*4096u;}
+static int in_window(uint32_t va){return va>=BASE && va<BASE+map_context->profile.page_capacity*4096u;}
 static void clear_window(void)
 {
  for(unsigned i=0;i<64;i++){
@@ -18,7 +18,7 @@ static void clear_window(void)
 int resident_refill(uint32_t address)
 {
  Context *c=map_context;
- if(address<BASE||address>=BASE+IMAGE_BYTES||!c->slot_count)return 0;
+ if(address<BASE||address>=BASE+c->profile.image_bytes||!c->slot_count)return 0;
  uint32_t physical=c->pages[(address-BASE)>>12];
  if(!physical)return 0;
  unsigned slot=c->slots[c->slot++];if(c->slot==c->slot_count)c->slot=0;
@@ -82,7 +82,7 @@ int resident_main(Context *c)
  }
  if(c->slot_count<4){sr_set(c->sr);return 31;}
  clear_window();c->slot=0;vbr_set((uint32_t)(uintptr_t)map_vectors);BARRIER();
- c->payload_rc=((int(*)(int,int,MapApi *))(BASE+512u))(1,0,&c->api);
+ c->payload_rc=((int(*)(int,int,MapApi *))(uintptr_t)c->profile.entry)(1,0,&c->api);
  /* kquit restored the masked shim. Do all mapping restoration from P2. */
  sr_set(sr_get()|0xf0u);clear_window();
  REG(0xff000000)=c->pteh;REG(0xff000004)=c->ptel;REG(0xff000034)=c->ptea;

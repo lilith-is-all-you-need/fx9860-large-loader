@@ -34,3 +34,6 @@ _\name:
  SC r_timer_stop,0x11b
 
  SC r_reset,0x236
+ SC r_find_first,0x43b
+ SC r_find_next,0x43c
+ SC r_find_close,0x43d

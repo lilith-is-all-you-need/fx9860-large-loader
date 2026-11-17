@@ -2,9 +2,8 @@
 #define KHICAS_MAPPED_LOADER_H
 #include <stdint.h>
 #include <stddef.h>
-#include "expected.h"
+#include <fxlarge/profile.h>
 #define BASE 0x00300000u
-#define PAGE_COUNT ((IMAGE_BYTES+4095u)/4096u)
 #define REG(a) (*(volatile uint32_t *)(uintptr_t)(a))
 #define BYTE(a) (*(volatile unsigned char *)(uintptr_t)(a))
 #define BARRIER() __asm__ volatile(".word 0x00ab\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop":::"memory")
@@ -29,7 +28,8 @@ typedef struct {
 _Static_assert(sizeof(Frame)==56 && offsetof(Frame,mach)==48,"gateway ABI");
 typedef struct {
  MapApi api;
- uint32_t pages[PAGE_COUNT];
+ FxLargeProfile profile;
+ uint32_t *pages;
  uint32_t sr,vbr,mmucr,pteh,ptel,ptea,ramword;
  uint32_t refills,high_refills,fault,reason,stage,phase,status,denied;
  uint32_t failure_stage,failure_status,payload_rc;
@@ -51,4 +51,5 @@ int r_open(const uint16_t *,int,int);int r_close(int);int r_size(int);int r_read
 int r_timer_install(int,void (*)(void),int);int r_timer_start(int);int r_timer_stop(int);int r_timer_remove(int);
 int r_putkey(int,int,int);void r_clear_keys(void);int r_keywait(int *,int *,int,int,int,uint16_t *);
 void r_poweroff(void);
+int r_media_free(const uint16_t *,uint32_t *);
 #endif

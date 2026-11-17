@@ -33,7 +33,7 @@ struct Context {
  uintptr_t guest_quit;
  struct {uintptr_t callback;int id;} timers[10];
  unsigned timer_calls,timer_skipped;
- uint16_t log_path[32],bin_path[32],self_path[32];
+ uint16_t log_path[64],bin_path[64],self_path[64];
  char log[LOG_BUFFER];
 };
 typedef struct {uint32_t r[8],pr,sr,sp,out_sr,mach,macl;} Frame;
