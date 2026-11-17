@@ -33,6 +33,12 @@ static __attribute__((noinline)) int verify_image(Context *c,int fd)
 }
 int main(void)
 {
+ r_clear();r_print(0,0,(const unsigned char *)"KhiCAS Loader 0.2",0);
+ r_print(0,14,(const unsigned char *)"MENU return untested",0);
+ r_print(0,26,(const unsigned char *)"Try EXE to resume",0);
+ r_print(0,38,(const unsigned char *)"Reload: RUN-MAT first",0);
+ r_print(0,52,(const unsigned char *)"EXE start; EXIT quit",0);r_display();
+ {int key=0;while(key!=30004&&key!=30002)r_getkey(&key);if(key==30002)return 1;}
  Context *c=0;const char *why="Allocation failed";
  screen("Checking files","Please wait");
  uint32_t sp;__asm__ volatile("mov r15,%0":"=r"(sp));
@@ -71,6 +77,10 @@ int main(void)
   REG(c->resident+off)=v-(uintptr_t)resident_begin+c->resident;
  }BARRIER();
  int (*run)(Context *)=(int(*)(Context *))(c->resident+(uintptr_t)resident_main-(uintptr_t)resident_begin);
+ /* The target may draw directly to the LCD. An OS menu resume can reveal
+    this OS buffer while GetKey still waits, so never leave a loading page. */
+ screen("If back from MENU:","EXE: try resume");
+ r_print(0,46,(const unsigned char *)"Or MENU > RUN-MAT",0);r_display();
  int result=run(c);r_quit(0);r_free(c);c=0;
  screen(result?"Stopped: see log":"KhiCAS returned","EXIT: back to menu");
  {int key=0;while(key!=30002&&key!=30010)r_getkey(&key);}return 1;

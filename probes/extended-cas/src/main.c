@@ -35,16 +35,21 @@ static void menu_callback(void)
 {r_putkey(4,9,0);r_timer_stop(menu_timer);r_timer_remove(menu_timer);}
 static int menu(void)
 {
+ /* gint draws into its own buffer. Leave an OS-owned return page before
+    GetKeyWait suspends in MENU; selecting this icon resumes that wait. */
+ r_clear();line(0,"CAS session closed");line(16,"EXE: reload CAS");
+ line(32,"MENU: another app");line(48,"No calculation kept");r_display();
  r_clear_keys();menu_timer=r_timer_install(0,menu_callback,0);
  if(menu_timer<=0)return 0;
  r_timer_start(menu_timer);int col=0,row=0;uint16_t key=0;
- r_keywait(&col,&row,0,1,0,&key);
- r_timer_stop(menu_timer);r_timer_remove(menu_timer);return 1;
+ do {r_keywait(&col,&row,0,1,0,&key);} while(col!=3||row!=2);
+ /* The callback already removed the one-shot timer. */
+ return 1;
 }
 int main(void)
 {
  for(;;){
-  r_clear();line(0,"KhiCAS mapped RC1");line(16,"Checking KHICAS.BIN");r_display();
+  r_clear();line(0,"KhiCAS mapped RC2");line(16,"Checking KHICAS.BIN");r_display();
   unsigned n=resident_end-resident_begin,bytes=(sizeof(Context)+255+n+31)&~31u;
   Context *c=r_malloc(bytes);int result=0;unsigned reason=0;
   if(!c)result=20;

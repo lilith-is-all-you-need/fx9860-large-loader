@@ -12,12 +12,15 @@
 用 Python 执行 `tools/prepare.py 原版.g1a 输出目录`。
 将构建出的 G1A 命名为 **KLoad.g1a**，和生成的 **khicas.bin、
 khicas.kpf、KLoad.txt** 一起放入计算器存储根目录；四个名称均需保留。
-从菜单启动 KLoad。先检查整个文件的 SHA-256，再查询映射和建立影子页，
+从菜单启动 KLoad，阅读 MENU 返回限制后按 EXE。先检查整个文件的 SHA-256，再查询映射和建立影子页，
 进入 KhiCAS 原有启动界面后按 EXE 或选择其模式。
 
 测试 2+2、2^10；按 MENU，选择另一个应用，随后重新打开 KLoad，
 检查是否读回刚才的会话。再次切换应用后回传 KLoad.txt，并说明画面和操作。
 EXIT 在 KhiCAS 内遵循 KhiCAS 的原有行为，并不强制退出整个应用。
+用户已反馈首次启动可用，但 MENU 后直接选回 KLoad 停在疑似 Loading。
+模拟器尚未复现这个实机问题；不能视为已经修复。可额外按一次 EXE 观察，
+需要重新启动时先进入 RUN-MAT 再打开 KLoad。本版启动页会明确提示。
 KLoad.txt 保存**最近一次启动**，每次启动重新写入；需要比较两轮时先复制上轮。
 KhiCAS 会按原行为读取/写入 session.xw、FMENU.cfg，已有会话需要保留时先备份。
 

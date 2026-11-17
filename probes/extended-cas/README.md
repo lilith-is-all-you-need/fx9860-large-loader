@@ -1,4 +1,4 @@
-# Source-integrated Giac loader (experimental RC1)
+# Source-integrated Giac loader (experimental RC2)
 
 Imported from the user's completed `mapped-cas-20261116` integration.
 This is distinct from the original 512-page KhiCAS adapter and synthetic
@@ -6,8 +6,8 @@ This is distinct from the original 512-page KhiCAS adapter and synthetic
 
 Approved payload: **2,859,236 bytes / 699 pages**, SHA-256
 `176a10ffa918f24f0b98ef89156dc04b02df09190dae0fbe0e3d59780e9455f8`.
-Release `KhiMap.g1a`: 9,880 bytes, SHA-256
-`45b3021c77663b2d955480a3d230c1c8fb97bccea9ca8b161c11f0d3d4a760c8`.
+RC2 `KhiMap.g1a`: 10,024 bytes, SHA-256
+`a5032870f6f3da6a76ab6848ae36e2e0da23053e805794aa8958e0f511aa1d1d`.
 Resident allocation is 6,912 bytes; CAS separately allocates 32,768 bytes.
 The combined 39,680 bytes were tested in a 40,960-byte simulated heap.
 
@@ -38,7 +38,7 @@ checks the full file SHA-256. Its own TLB refill extends past `0x00500000` while
 leaving the OS's 512-entry table intact. Virtual layout and entry are retained.
 MENU/OFF clean up CAS, C++ objects, gint and both allocations before OS handoff.
 
-RC1 rejects payload file operations, timer/quit callback registration and direct
+The runtime rejects payload file operations, timer/quit callback registration and direct
 reset/poweroff, keeping file addresses stable during execution. It does not
 implement arbitrary Flash movement and callbacks for other programs. Uncached
 Flash mappings avoid an unverified cache-alias assumption and may be slower.
@@ -48,3 +48,8 @@ stage/error codes; it does not write a result file during CAS execution.
 Loader code follows FxStudio's MIT license. The gint-derived adapter retains
 its upstream free-use notice in `payload-adapter/UPSTREAM-NOTICE.txt`.
 No Giac archive, original binary or proprietary firmware is published here.
+
+RC2 changes only the launcher: after MENU, selecting this icon shows an ended-session
+page; EXE reloads CAS. Prior calculations are not retained. `VALIDATION.json` is
+the historical RC1 record. See `VALIDATION-REENTRY-20261117.json` and the root
+`HARDWARE-20261117.md` for current evidence and remaining hardware limitations.

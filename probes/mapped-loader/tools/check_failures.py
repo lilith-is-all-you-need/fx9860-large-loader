@@ -20,9 +20,11 @@ for case,expected,extra in [
   path=store/'khicas.kpf';b=bytearray(path.read_bytes());b[11 if case=='profile-version' else 24]^=1;path.write_bytes(b)
  options=['--os-firmware',a.firmware.resolve(),'--memory-profile','probe3',*extra]
  with Session(store/'KLoad.g1a',root,options,cwd=root) as s:
-  s.remote.request('c',wait=False);deadline=time.monotonic()+10
+  s.remote.request('c',wait=False);deadline=time.monotonic()+10;confirmed=False
   while time.monotonic()<deadline:
    time.sleep(.1);status=s.command('status');log=(store/'KLoad.txt').read_text()
+   if not confirmed and any(c['number']==0x90f for c in s.command('syscalls')['recent']):
+    s.command('key',key='EXE',down=True);time.sleep(.15);s.command('key',key='EXE',down=False);confirmed=True
    if expected in log or status['state']!='running':break
   assert expected in log,(case,status,log.strip())
   assert 'TARGET_GETKEY=' not in log,case

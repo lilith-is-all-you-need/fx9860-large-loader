@@ -15,10 +15,12 @@ shutil.copyfile(a.loader,storage/'KLoad.g1a')
 options=['--os-firmware',a.firmware.resolve(),'--memory-profile','probe3','--trace-syscalls',out/'syscalls.jsonl']
 if a.stress:options+=['--file-map-stress']
 with Session(storage/'KLoad.g1a',out,options,cwd=out,timeout=30) as s:
- s.remote.request('c',wait=False);start=time.monotonic();ready=False
+ s.remote.request('c',wait=False);start=time.monotonic();ready=False;confirmed=False
  while time.monotonic()-start<a.seconds:
   time.sleep(1);status=s.command('status')
   trace=s.command('syscalls').get('recent',[])
+  if not confirmed and any(x['number']==0x90f and str(x.get('caller','')).startswith('003') for x in trace):
+   s.command('key',key='EXE',down=True);time.sleep(.15);s.command('key',key='EXE',down=False);confirmed=True
   # Waiting at the real target's GetKey, after a durable gateway checkpoint.
   report=(storage/'KLoad.txt').read_text(errors='replace')
   if 'TARGET_GETKEY=' in report:
