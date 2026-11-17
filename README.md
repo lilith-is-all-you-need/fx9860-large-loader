@@ -1,5 +1,13 @@
 # fx9860-large-loader
 
+**Project moved / 项目已合并** — The current source and issues live in
+[FX Universal Loader](https://github.com/lilith-is-all-you-need/fx_universal_loader).
+The large runtime is maintained in its
+[large directory](https://github.com/lilith-is-all-you-need/fx_universal_loader/tree/main/large).
+Download FxProfile and calculator launchers from the
+[unified release](https://github.com/lilith-is-all-you-need/fx_universal_loader/releases/tag/v0.2.0-beta.1).
+This repository preserves earlier SDK pins and hardware records.
+
 External Flash execution backends for fx-9860GIII, including the experimental
 path beyond the OS's 512-page / 2 MiB mapping window.
 
